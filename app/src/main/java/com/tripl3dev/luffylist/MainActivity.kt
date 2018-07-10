@@ -14,6 +14,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import com.tripl3dev.luffylist.R.id.*
 import com.tripl3dev.luffylist.databinding.TestListItemBinding
 import com.tripl3dev.luffyyview.baseAdapter.BaseListAdapter
 import com.tripl3dev.luffyyview.baseAdapter.ListUtilsCallbacks
@@ -58,17 +59,30 @@ class MainActivity : AppCompatActivity(), MainHolderInterface<TestModel> {
     fun setUpList() {
         //intialize your adapter it takes two params
         mAdapter = BaseListAdapter(this, this)
+        mAdapter = BaseListAdapter(object :MainHolderInterface<TestModel>{
+
+            override fun getView(type: Int): Int {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun getViewData(holder: RecyclerView.ViewHolder, t: TestModel, position: Int) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        }, this)
 
         // You can get RecyclerView instance by : yourLuffyView.listView
+
+        // setLayoutManager
         testListView.listView.layoutManager = LinearLayoutManager(this)
         testListView.listView.setHasFixedSize(true)
+        //SetAdapter
         testListView.listView.adapter = mAdapter
 
 
         // setOnLoadMore to your list
         testListView.setOnLoadMoreListener(object : PrettyList.OnLoadMoreListener {
             override fun onLoadMore(currentPage: Int) {
-                testListView.showLoading(true)
                 Handler().postDelayed({
                     addDummyData(currentPage)
                 },500)
@@ -87,7 +101,12 @@ class MainActivity : AppCompatActivity(), MainHolderInterface<TestModel> {
         }))
 
         // set custom loading view for Pagination you can just set the view or set the view and call back returns your view to make any action on it .
-        testListView.setPaginationLoadingItem(PaginationLoadingItem(R.layout.pagination_loading_custom_layout))
+        testListView.setPaginationLoadingItem(PaginationLoadingItem(R.layout.pagination_loading_custom_layout, object : PaginationLoadingItem.PaginateLoading {
+            override fun getLoadingView(loadingView: View) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        }))
 
 
 

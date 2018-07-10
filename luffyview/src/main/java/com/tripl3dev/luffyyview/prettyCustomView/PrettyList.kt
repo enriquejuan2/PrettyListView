@@ -92,6 +92,7 @@ class PrettyList : FrameLayout {
         val builder: NoPaginateBuilder = NoPaginate.with(listView).setOnLoadMoreListener {
             Log.e("OnLoadMore", "Current page  is $currentPage")
             loadMoreListener.onLoadMore(currentPage)
+            showLoading(true)
             currentPage++
         }
         if (this::mErrorItem.isInitialized)
@@ -184,9 +185,9 @@ class PrettyList : FrameLayout {
      *@param noMore if true will stop pagination
      *
      */
-    fun setNoMoreItems(noMore: Boolean) {
+    fun setNoMoreItems(noMoreItems: Boolean) {
         if (this::paginate.isInitialized) {
-            paginate.setNoMoreItems(noMore)
+            paginate.setNoMoreItems(noMoreItems)
         } else {
             Log.e("PrettyList", paginatingNotIntializedError)
         }
