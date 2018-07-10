@@ -127,6 +127,16 @@ setFirstPage(firstPage: Int)
         luffyView.onDestroyPrettyList()
     }
 ```
+- setting swapToRefresh Listener
+```kotlin
+luffyView.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { 
+//Implement your onRefresh action here
+})
+
+//You can stop refreshing by 
+luffyView.stopRefreshing()
+```
+
 
 
 # Credits
