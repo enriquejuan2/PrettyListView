@@ -1,4 +1,4 @@
-# Luffy List View
+# Luffy View
  Powerful recycler view  with the ability to  swapToRefresh  and  pagination using 
  [NoPaginate library](https://github.com/NoNews/NoPaginate) with few number of code lines  .   Lets see How to use it :
  
