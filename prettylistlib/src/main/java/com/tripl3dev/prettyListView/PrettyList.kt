@@ -1,4 +1,4 @@
-package com.tripl3dev.luffyyview.prettyCustomView
+package com.tripl3dev.prettyListView
 
 import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
@@ -6,14 +6,10 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.Log
 import android.widget.FrameLayout
-import com.tripl3dev.luffyyview.R
-import ru.alexbykov.nopaginate.callback.OnLoadMoreListener
 import ru.alexbykov.nopaginate.item.ErrorItem
 import ru.alexbykov.nopaginate.item.LoadingItem
 import ru.alexbykov.nopaginate.paginate.NoPaginate
 import ru.alexbykov.nopaginate.paginate.NoPaginateBuilder
-import java.util.logging.Handler
-import kotlin.math.log
 
 class PrettyList : FrameLayout {
 
