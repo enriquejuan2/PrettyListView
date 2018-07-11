@@ -1,6 +1,6 @@
 # PrettyListView
  Powerful recycler view  with the ability to  swapToRefresh  and  pagination using 
- [NoPaginate library](https://github.com/NoNews/NoPaginate) with few number of code lines  .   Lets see How to use it :
+ [NoPaginate library](https://github.com/NoNews/NoPaginate) with few number of code lines  and updating via diffUtils.   Lets see How to use it :
  
 # Installation
 - #### Step 1. Add the JitPack repository to your build file 
