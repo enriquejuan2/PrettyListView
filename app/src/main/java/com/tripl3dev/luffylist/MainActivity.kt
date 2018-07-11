@@ -2,7 +2,6 @@ package com.tripl3dev.luffylist
 
 
 import android.databinding.DataBindingUtil
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -14,14 +13,13 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
-import com.tripl3dev.luffylist.R.id.*
 import com.tripl3dev.luffylist.databinding.TestListItemBinding
-import com.tripl3dev.luffyyview.baseAdapter.BaseListAdapter
-import com.tripl3dev.luffyyview.baseAdapter.ListUtilsCallbacks
-import com.tripl3dev.luffyyview.baseAdapter.MainHolderInterface
-import com.tripl3dev.luffyyview.paginationUtils.PaginationErrorItem
-import com.tripl3dev.luffyyview.paginationUtils.PaginationLoadingItem
-import com.tripl3dev.luffyyview.prettyCustomView.PrettyList
+import com.tripl3dev.prettyListView.baseAdapter.BaseListAdapter
+import com.tripl3dev.prettyListView.baseAdapter.ListUtilsCallbacks
+import com.tripl3dev.prettyListView.baseAdapter.MainHolderInterface
+import com.tripl3dev.prettyListView.paginationUtils.PaginationErrorItem
+import com.tripl3dev.prettyListView.paginationUtils.PaginationLoadingItem
+import com.tripl3dev.prettyListView.PrettyList
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainHolderInterface<TestModel> {

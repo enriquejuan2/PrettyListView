@@ -1,4 +1,4 @@
-package com.tripl3dev.luffyyview;
+package com.tripl3dev.prettyListView;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

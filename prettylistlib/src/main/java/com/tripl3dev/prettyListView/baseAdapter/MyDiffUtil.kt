@@ -1,4 +1,4 @@
-package com.tripl3dev.luffyyview.baseAdapter
+package com.tripl3dev.prettyListView.baseAdapter
 
 import android.support.v7.util.DiffUtil
 import java.util.*

@@ -1,4 +1,4 @@
-package com.tripl3dev.luffyyview;
+package com.tripl3dev.prettyListView;
 
 import org.junit.Test;
 

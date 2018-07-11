@@ -1,4 +1,4 @@
-package com.tripl3dev.luffyyview.paginationUtils
+package com.tripl3dev.prettyListView.paginationUtils
 
 import android.support.annotation.LayoutRes
 import android.support.v7.widget.RecyclerView
