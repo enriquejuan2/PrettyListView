@@ -1,4 +1,4 @@
-# Luffy View
+# PrettyListView
  Powerful recycler view  with the ability to  swapToRefresh  and  pagination using 
  [NoPaginate library](https://github.com/NoNews/NoPaginate) with few number of code lines  .   Lets see How to use it :
  
@@ -16,15 +16,15 @@ allprojects {
 - #### Step 2. Add the dependency
  ```
  	dependencies {
-	        implementation 'com.github.Tripl3Dev:LuffyListView:1.0.0'
-	        }
+	        implementation 'com.github.Tripl3Dev:PrettyListView:1.0.0'
+		}
   ```
   
   
   # Usage 
  #### 1. In XML View
 ```xml 
-        <com.tripl3dev.luffyyview.prettyCustomView.PrettyList
+        <com.tripl3dev.prettyListView.PrettyList
         android:id="@+id/testListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -32,14 +32,14 @@ allprojects {
 ```
 To Add SwapToRefresh to your view you have to add 
 ```xml
-        <com.tripl3dev.luffyyview.prettyCustomView.PrettyList
+        <com.tripl3dev.prettyListView.PrettyList
         app:hasSwapToRefresh="true" />
 ```
  
  #### 2. In Activity or Fragment
 - Get your view
  ```kotlin
-        val luffyView =  findViewById<PrettyList>(R.id.testListView)
+        val prettyList =  findViewById<PrettyList>(R.id.testListView)
 ```
 - Intialize adapter instance 
 ```kotlin
@@ -64,7 +64,7 @@ To Add SwapToRefresh to your view you have to add
  - set up List
  1. you can get your list view then set its layout and other configuration u need
 ```kotlin
-var myListView = luffyView.listView
+var myListView = prettyList.listView
 myListView.layoutManager = LinearLayoutManager(this)
 myListView.listView.setHasFixedSize(true)
 myListView.listView.adapter = mAdapter
@@ -86,7 +86,7 @@ You have three ways to notify list modification
  - Set pagination config and callback to your list
 1. setOnLoadMoreListener
 ```kotlin 
-luffyView.setOnLoadMoreListener(object : PrettyList.OnLoadMoreListener {
+prettyList.setOnLoadMoreListener(object : PrettyList.OnLoadMoreListener {
             override fun onLoadMore(currentPage: Int) {
             // Load More Data Here
             }
@@ -94,7 +94,7 @@ luffyView.setOnLoadMoreListener(object : PrettyList.OnLoadMoreListener {
 ```
 2. set customErrorView to be displayed on pagination error
 ```kotlin
-  luffyView.setPaginationErrorItem(PaginationErrorItem(R.layout.your_pagination_error_layout, object : PaginationErrorItem.PaginateErrorListener {
+  prettyList.setPaginationErrorItem(PaginationErrorItem(R.layout.your_pagination_error_layout, object : PaginationErrorItem.PaginateErrorListener {
             override fun getErrorView(errorView: View) {
                 // Get you your error view to make any action on it
                 val button = errorView.findViewById<Button>(R.id.errorBut)
@@ -105,36 +105,36 @@ luffyView.setOnLoadMoreListener(object : PrettyList.OnLoadMoreListener {
 ```
 3. setCustomLoadingView to be displayed on loading
 ```kotlin
-  luffyView.setPaginationLoadingItem(PaginationLoadingItem(R.layout.paginate_loading_custom_layout, object : PaginationLoadingItem.PaginateLoading {
+  prettyList.setPaginationLoadingItem(PaginationLoadingItem(R.layout.paginate_loading_custom_layout, object : PaginationLoadingItem.PaginateLoading {
             override fun getLoadingView(loadingView: View) {
                 // Get you your loading view to make any action on it
                 }
         }))
 ```
-4. (very Important) Finally you have to commit pagination ,it wont work without commit ```luffyView.commitPagination()```
+4. (very Important) Finally you have to commit pagination ,it wont work without commit ```prettyList.commitPagination()```
 5. There are some methods for pagination to load, StopLoading, showError, hideError, setNoMoreItems  and setFirstPage index(Should use before setting pagination default = 1 )
 ```kotlin
-luffyView.showError(show: Boolean)
-luffyView.showLoading(show: Boolean) 
-luffyView.setNoMoreItems(noMoreItems: Boolean)
+prettyList.showError(show: Boolean)
+prettyList.showLoading(show: Boolean) 
+prettyList.setNoMoreItems(noMoreItems: Boolean)
 setFirstPage(firstPage: Int)
 ```
-6. You can reset pagination and set currentPage to the default ```luffyView.resetPagination()```
+6. You can reset pagination and set currentPage to the default ```prettyList.resetPagination()```
 7. You should call onDestroyPrettyList()  in the onDestroy of activity or fragment to avoid memory leak
 ```kotlin
   override fun onDestroy() {
         super.onDestroy()
-        luffyView.onDestroyPrettyList()
+        prettyList.onDestroyPrettyList()
     }
 ```
 - setting swapToRefresh Listener
 ```kotlin
-luffyView.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { 
+prettyList.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { 
 //Implement your onRefresh action here
 })
 
 //You can stop refreshing by 
-luffyView.stopRefreshing()
+prettyList.stopRefreshing()
 ```
 
 
