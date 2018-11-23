@@ -4,11 +4,6 @@ import android.support.v7.util.DiffUtil
 import java.util.*
 
 class MyDiffUtil<T>(val oldList: ArrayList<T>, val newList: ArrayList<T> ) : DiffUtil.Callback() {
-   companion object {
-       const  val EQUALS =-1
-       const val NOT_EQUALS=-2
-       const val NOT_DEFINED =-3
-   }
 
     constructor(oldList: ArrayList<T>, newList: ArrayList<T> , ss : ContentsAreTheSame<T>):this (oldList,newList){
         setItemsTheSame(ss)
@@ -20,11 +15,7 @@ class MyDiffUtil<T>(val oldList: ArrayList<T>, val newList: ArrayList<T> ) : Dif
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return if (this::itemsTheSame.isInitialized) {
-            if (itemsTheSame.areItemsTheSame(oldList[oldItemPosition], newList[newItemPosition])!= NOT_DEFINED){
-                itemsTheSame.areItemsTheSame(oldList[oldItemPosition], newList[newItemPosition]) == EQUALS
-            }else{
-                itemsTheSame.areItemsHaveSameContent(oldList[oldItemPosition], newList[newItemPosition])
-            }
+            itemsTheSame.areItemsTheSame(oldList[oldItemPosition],newList[newItemPosition])
         }else{
             oldList[oldItemPosition] == newList[newItemPosition]
         }
@@ -42,14 +33,25 @@ class MyDiffUtil<T>(val oldList: ArrayList<T>, val newList: ArrayList<T> ) : Dif
         return if (this::itemsTheSame.isInitialized) {
             itemsTheSame.areItemsHaveSameContent(oldList[oldItemPosition], newList[newItemPosition])
         }else{
-            true
+            oldList[oldItemPosition] == newList[newItemPosition]
         }
     }
 
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+         return if (this::itemsTheSame.isInitialized && getChangePayload(oldItemPosition , newItemPosition) !=null) {
+            itemsTheSame.getChangePayload(oldItemPosition , newItemPosition)
+        }else{
+           super.getChangePayload(oldItemPosition, newItemPosition)
+        }
+    }
 
     interface ContentsAreTheSame<T> {
         fun areItemsHaveSameContent(oldItem: T, newItem: T): Boolean
-        fun  areItemsTheSame(oldItem: T, newItem: T):Int{return NOT_DEFINED
+        fun areItemsTheSame(oldItem: T, newItem: T):Boolean
+        fun getChangePayload(oldItemPosition :Int , newItemPosition: Int) :Any?{
+            return null
         }
+
     }
+
 }
