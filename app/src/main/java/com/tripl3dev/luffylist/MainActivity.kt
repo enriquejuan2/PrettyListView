@@ -8,19 +8,19 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.widget.Toast
 import com.tripl3dev.luffylist.databinding.TestListItemBinding
-import com.tripl3dev.prettyListView.baseAdapter.BaseListAdapter
-import com.tripl3dev.prettyListView.baseAdapter.ListUtilsCallbacks
-import com.tripl3dev.prettyListView.baseAdapter.MainHolderInterface
-import com.tripl3dev.prettyListView.baseAdapter.MyDiffUtil
+import com.tripl3dev.prettyListView.baseAdapter.*
+import com.tripl3dev.prettyListView.pagination.ListPaginationListener
+import com.tripl3dev.prettyListView.pagination.WrapContentLinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var mAdapter: BaseListAdapter<TestModel>
-    var testListData: ArrayList<TestModel> = ArrayList()
+    var testListData: ArrayList<TestModel?> = ArrayList()
 
     var list: ObservableArrayList<TestModel> = ObservableArrayList()
 
@@ -29,8 +29,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mAdapter = BaseListAdapter(this, object : MainHolderInterface<TestModel> {
-            override fun getList(): ArrayList<TestModel> {
+        testListView.layoutManager = WrapContentLinearLayoutManager(this)
+        mAdapter = BaseListAdapter.with<TestModel>(testListView).setAdapter(object : MainHolderInterface<TestModel> {
+            override fun getList(): ArrayList<TestModel?> {
                 return testListData
             }
 
@@ -42,11 +43,28 @@ class MainActivity : AppCompatActivity() {
                 val itemBinding = DataBindingUtil.bind<TestListItemBinding>(holder.itemView)
                 itemBinding!!.listItemText.text = t.text
             }
+        }).hasPaginated()
+                .donePagination()
+                .adapterDone()
+
+        mAdapter.setPaginationListener(object : ListPaginationListener {
+            override fun onLoadMore(page: Int, totalItemCount: Int, listView: RecyclerView) {
+                Log.e("PageCount","page Count is $page")
+                Handler().postDelayed({
+                    val tempList = ArrayList<TestModel>()
+                    for (i in 1..20) {
+                        tempList.add(TestModel(i * count, "Item Number $i page $count  "))
+                    }
+                    count++
+                    testListData.addAll(tempList)
+
+                        mAdapter.paginationLoaded()
+
+                    mAdapter.updateList()
+
+                },1000)
+             }
         })
-
-
-        testListView.layoutManager = LinearLayoutManager(this)
-        testListView.adapter = mAdapter
 
 
 
@@ -55,10 +73,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity,"Items Count become =  $itemCount",Toast.LENGTH_SHORT).show()
             }
         })
-        fun getNewId() = testListData[testListData.size - 1].id + 1
+        fun getNewId() = testListData[testListData.size - 1]!!.id + 1
         addMore.setOnClickListener {
           val tempList = ArrayList<TestModel>()
-            for (i in 1..6) {
+            for (i in 1..20) {
                 tempList.add(TestModel(i * count, "Item Number $i page $count  "))
             }
             count++
@@ -92,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         changeIndex.setOnClickListener {
             val newItemText = inputToIndex.text.toString()
             val i = index.text.toString().toInt()
-            testListData[i] = TestModel(testListData[i].id, newItemText)
+            testListData[i] = TestModel(testListData[i]!!.id, newItemText)
             mAdapter.updateList()
         }
     }

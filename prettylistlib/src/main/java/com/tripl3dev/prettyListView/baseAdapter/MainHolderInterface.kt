@@ -8,7 +8,7 @@ interface MainHolderInterface<T> {
     @LayoutRes
     fun getView(type:Int): Int
 
-    fun getList(): ArrayList<T>
+    fun getList(): ArrayList<T?>
 
     fun getViewData(holder: RecyclerView.ViewHolder,t:T,position: Int = 0)
 

@@ -3,9 +3,9 @@ package com.tripl3dev.prettyListView.baseAdapter
 import android.support.v7.util.DiffUtil
 import java.util.*
 
-class MyDiffUtil<T>(val oldList: ArrayList<T>, val newList: ArrayList<T> ) : DiffUtil.Callback() {
+class MyDiffUtil<T>(val oldList: ArrayList<T?>, val newList: ArrayList<T?> ) : DiffUtil.Callback() {
 
-    constructor(oldList: ArrayList<T>, newList: ArrayList<T> , ss : ContentsAreTheSame<T>):this (oldList,newList){
+    constructor(oldList: ArrayList<T?>, newList: ArrayList<T?> , ss : ContentsAreTheSame<T>):this (oldList,newList){
         setItemsTheSame(ss)
     }
     private lateinit var itemsTheSame: ContentsAreTheSame<T>
@@ -15,7 +15,7 @@ class MyDiffUtil<T>(val oldList: ArrayList<T>, val newList: ArrayList<T> ) : Dif
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return if (this::itemsTheSame.isInitialized) {
-            itemsTheSame.areItemsTheSame(oldList[oldItemPosition],newList[newItemPosition])
+            itemsTheSame.areItemsTheSame(oldList[oldItemPosition]!!,newList[newItemPosition]!!)
         }else{
             oldList[oldItemPosition] == newList[newItemPosition]
         }
@@ -31,7 +31,7 @@ class MyDiffUtil<T>(val oldList: ArrayList<T>, val newList: ArrayList<T> ) : Dif
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return if (this::itemsTheSame.isInitialized) {
-            itemsTheSame.areItemsHaveSameContent(oldList[oldItemPosition], newList[newItemPosition])
+            itemsTheSame.areItemsHaveSameContent(oldList[oldItemPosition]!!, newList[newItemPosition]!!)
         }else{
             oldList[oldItemPosition] == newList[newItemPosition]
         }
