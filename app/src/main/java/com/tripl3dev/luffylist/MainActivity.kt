@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 .setLoadingLayout(R.layout.loading_layout)
                 .paginationDone()
 
-        adapterBuilder.adapterDone()
+        mAdapter = adapterBuilder.adapterDone()
 
 
 
