@@ -1,4 +1,5 @@
-# PrettyListView
+# PrettyListView 
+### Not Working for now (under maintenance) 
  Powerful recycler view  with the ability to  swapToRefresh  and  pagination using 
  [NoPaginate library](https://github.com/NoNews/NoPaginate) with few number of code lines  and updating via diffUtils.   Lets see How to use it :
  
@@ -82,62 +83,3 @@ You have three ways to notify list modification
         ```
 -- Third : You can use ```mAdapter.notify..()``` Methods
 
-
- - Set pagination config and callback to your list
-1. setOnLoadMoreListener
-```kotlin 
-prettyList.setOnLoadMoreListener(object : PrettyList.OnLoadMoreListener {
-            override fun onLoadMore(currentPage: Int) {
-            // Load More Data Here
-            }
-        })
-```
-2. set customErrorView to be displayed on pagination error
-```kotlin
-  prettyList.setPaginationErrorItem(PaginationErrorItem(R.layout.your_pagination_error_layout, object : PaginationErrorItem.PaginateErrorListener {
-            override fun getErrorView(errorView: View) {
-                // Get you your error view to make any action on it
-                val button = errorView.findViewById<Button>(R.id.errorBut)
-                button.setOnClickListener{retry()}
-                }
-            }
-        }))
-```
-3. setCustomLoadingView to be displayed on loading
-```kotlin
-  prettyList.setPaginationLoadingItem(PaginationLoadingItem(R.layout.paginate_loading_custom_layout, object : PaginationLoadingItem.PaginateLoading {
-            override fun getLoadingView(loadingView: View) {
-                // Get you your loading view to make any action on it
-                }
-        }))
-```
-4. (very Important) Finally you have to commit pagination ,it wont work without commit ```prettyList.commitPagination()```
-5. There are some methods for pagination to load, StopLoading, showError, hideError, setNoMoreItems  and setFirstPage index(Should use before setting pagination default = 1 )
-```kotlin
-prettyList.showError(show: Boolean)
-prettyList.showLoading(show: Boolean) 
-prettyList.setNoMoreItems(noMoreItems: Boolean)
-setFirstPage(firstPage: Int)
-```
-6. You can reset pagination and set currentPage to the default ```prettyList.resetPagination()```
-7. You should call onDestroyPrettyList()  in the onDestroy of activity or fragment to avoid memory leak
-```kotlin
-  override fun onDestroy() {
-        super.onDestroy()
-        prettyList.onDestroyPrettyList()
-    }
-```
-- setting swapToRefresh Listener
-```kotlin
-prettyList.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { 
-//Implement your onRefresh action here
-})
-
-//You can stop refreshing by 
-prettyList.stopRefreshing()
-```
-
-
-
-# Credits
-1. [NoPaginate](https://github.com/NoNews/NoPaginate)
