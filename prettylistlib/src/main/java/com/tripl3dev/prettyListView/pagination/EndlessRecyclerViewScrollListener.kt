@@ -1,13 +1,19 @@
 package com.tripl3dev.prettyListView.pagination
 
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import java.util.logging.Handler
 
+/**
+ * ****** Credits ******
+ *
+ * Created By : CodepathGuide
+ *
+ * URL :https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView
+ */
 
-abstract class EndlessRecyclerViewScrollListener(private var visibleThreshold : Int,private val listLayoutManager: RecyclerView.LayoutManager) : RecyclerView.OnScrollListener() {
+abstract class EndlessRecyclerViewScrollListener(private var visibleThreshold: Int, private val listLayoutManager: RecyclerView.LayoutManager) : RecyclerView.OnScrollListener() {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
 //    private var visibleThreshold = 5
@@ -21,7 +27,7 @@ abstract class EndlessRecyclerViewScrollListener(private var visibleThreshold : 
     private val startingPageIndex = 0
 
     // stop Loading
-    var stopLoading =false
+    var stopLoading = false
 
     internal lateinit var mLayoutManager: RecyclerView.LayoutManager
 
@@ -73,17 +79,18 @@ abstract class EndlessRecyclerViewScrollListener(private var visibleThreshold : 
     override fun onScrolled(view: RecyclerView?, dx: Int, dy: Int) {
         var lastVisibleItemPosition = 0
         val totalItemCount = mLayoutManager.itemCount
+        if (totalItemCount == previousTotalItemCount + 1) return
 
         if (stopLoading) return
-            when (mLayoutManager) {
-                is StaggeredGridLayoutManager -> {
-                    val lastVisibleItemPositions = (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
-                    // get maximum element within the list
-                    lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
-                }
-                is GridLayoutManager -> lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
-                is LinearLayoutManager -> lastVisibleItemPosition = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        when (mLayoutManager) {
+            is StaggeredGridLayoutManager -> {
+                val lastVisibleItemPositions = (mLayoutManager as StaggeredGridLayoutManager).findLastVisibleItemPositions(null)
+                // get maximum element within the list
+                lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions)
             }
+            is GridLayoutManager -> lastVisibleItemPosition = (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
+            is LinearLayoutManager -> lastVisibleItemPosition = (mLayoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        }
 
         // If the total item count is zero and the previous isn't, assume the
         // list is invalidated and should be reset back to initial state

@@ -3,6 +3,7 @@ package com.tripl3dev.prettyListView.baseAdapter
 import android.support.v7.widget.RecyclerView
 import com.tripl3dev.prettyListView.pagination.PaginationBuilder
 
+
 class AdapterBuilder<T> internal constructor(val listView: RecyclerView) {
     lateinit var holder: MainHolderInterface<T>
     internal var paginationBuilder: PaginationBuilder<T>? = null

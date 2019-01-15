@@ -6,7 +6,6 @@ import com.tripl3dev.prettyListView.R
 import com.tripl3dev.prettyListView.baseAdapter.AdapterBuilder
 
 class PaginationBuilder<T>internal constructor(val adapterBuilder: AdapterBuilder<T>) {
-    internal var isPaginated = false
     internal var visibleThreshold = 5
 
     @LayoutRes
@@ -15,24 +14,35 @@ class PaginationBuilder<T>internal constructor(val adapterBuilder: AdapterBuilde
     @LayoutRes
     internal var errorLayoutRes : Int = R.layout.default_pagination_error
 
+    /**
+     * Setting Visible threshold
+     */
     fun setVisibleThreshold(visibleThreshold: Int) :PaginationBuilder<T>{
         this.visibleThreshold = visibleThreshold
         return this
     }
 
+    /**
+     * Setting error layout for pagination
+     *
+     */
 
     fun setErrorLayout(@LayoutRes errorLayoutRes : Int):PaginationBuilder<T>{
         this.errorLayoutRes  = errorLayoutRes
         return this
     }
 
+    /**
+     * Setting Loading layout for pagination
+     *
+     */
     fun setLoadingLayout(@LayoutRes loadingLayoutRes: Int):PaginationBuilder<T>{
         this.loadingLayoutRes = loadingLayoutRes
         return this
     }
 
 
-     fun donePagination() :AdapterBuilder<T>{
+     fun paginationDone() :AdapterBuilder<T>{
         adapterBuilder.paginationBuilder = this
         return adapterBuilder
     }

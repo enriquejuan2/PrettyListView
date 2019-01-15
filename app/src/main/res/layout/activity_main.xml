@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
     android:orientation="vertical"
     tools:context=".MainActivity">
     <EditText
@@ -18,89 +19,5 @@
         android:layout_height="0dp"
         app:hasSwapToRefresh="true"
         android:layout_weight="1" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/addMore"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Add More" />
-        <Button
-            android:id="@+id/clearBut"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="clear All" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/inputToIndex"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Item Text"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:text="at"
-            />
-        <EditText
-            android:id="@+id/index"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="Index"
-            />
-
-        <Button
-            android:id="@+id/addToIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="add"
-            />
-        <Button
-            android:id="@+id/changeIndex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Change"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/addFirstOrLast"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Item text"
-            />
-        <Button
-            android:id="@+id/addLastBut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add Last"
-            android:textSize="12sp"/>
-        <Button
-            android:id="@+id/addFirstBut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add first"
-            android:textSize="12sp"/>
-    </LinearLayout>
 </LinearLayout>

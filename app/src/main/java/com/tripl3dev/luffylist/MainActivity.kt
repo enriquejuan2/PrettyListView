@@ -6,9 +6,10 @@ import android.databinding.ObservableArrayList
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Toast
 import com.tripl3dev.luffylist.databinding.TestListItemBinding
 import com.tripl3dev.prettyListView.baseAdapter.*
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         testListView.layoutManager = WrapContentLinearLayoutManager(this)
-        mAdapter = BaseListAdapter.with<TestModel>(testListView).setAdapter(object : MainHolderInterface<TestModel> {
+
+        val adapterBuilder = BaseListAdapter.with<TestModel>(testListView).setAdapter(object : MainHolderInterface<TestModel> {
             override fun getList(): ArrayList<TestModel?> {
                 return testListData
             }
@@ -43,77 +45,86 @@ class MainActivity : AppCompatActivity() {
                 val itemBinding = DataBindingUtil.bind<TestListItemBinding>(holder.itemView)
                 itemBinding!!.listItemText.text = t.text
             }
-        }).hasPaginated()
-                .donePagination()
-                .adapterDone()
+        })
+
+
+        adapterBuilder.hasPaginated()
+                .setErrorLayout(R.layout.error_layout)
+                .setLoadingLayout(R.layout.loading_layout)
+                .paginationDone()
+
+        adapterBuilder.adapterDone()
+
+
 
         mAdapter.setPaginationListener(object : ListPaginationListener {
             override fun onLoadMore(page: Int, totalItemCount: Int, listView: RecyclerView) {
-                Log.e("PageCount","page Count is $page")
+                if (page == 5) {
+                    mAdapter.paginationError()
+                    return
+                }
                 Handler().postDelayed({
-                    val tempList = ArrayList<TestModel>()
-                    for (i in 1..20) {
-                        tempList.add(TestModel(i * count, "Item Number $i page $count  "))
-                    }
+                    testListData.addAll(getData())
                     count++
-                    testListData.addAll(tempList)
+                    mAdapter.paginatedDataAdded()
+                }, 1000)
+            }
 
-                        mAdapter.paginationLoaded()
+            override fun onError(errorView: View) {
+                errorView.setOnClickListener {
+                    mAdapter.paginationLoading()
+                }
+            }
 
-                    mAdapter.updateList()
-
-                },1000)
-             }
+            override fun onLoading(loadingView: View) {
+                super.onLoading(loadingView)
+            }
         })
 
 
 
-        mAdapter.setListCallBacks(object:ListUtilsCallbacks<TestModel>{
+
+        mAdapter.setListCallBacks(object : ListUtilsCallbacks<TestModel> {
             override fun onDataCountChanged(itemCount: Int) {
-                Toast.makeText(this@MainActivity,"Items Count become =  $itemCount",Toast.LENGTH_SHORT).show()
             }
         })
-        fun getNewId() = testListData[testListData.size - 1]!!.id + 1
-        addMore.setOnClickListener {
-          val tempList = ArrayList<TestModel>()
-            for (i in 1..20) {
-                tempList.add(TestModel(i * count, "Item Number $i page $count  "))
+
+
+        testListData.addAll(getData())
+        mAdapter.updateList()
+        count++
+
+
+
+
+
+        filterField.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
             }
-            count++
-            testListData.addAll(tempList)
-            mAdapter.updateList()
-        }
 
-        clearBut.setOnClickListener {
-            testListData.clear()
-            mAdapter.updateList()
-        }
-        addToIndex.setOnClickListener {
-            val newItemText = inputToIndex.text.toString()
-            val i = index.text.toString().toInt()
-            testListData.add(i, TestModel(getNewId(), newItemText))
-            mAdapter.updateList()
-        }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-        addFirstBut.setOnClickListener {
-            val newItemText = addFirstOrLast.text.toString()
-            testListData.add(0, TestModel(getNewId(), newItemText))
-            mAdapter.updateList()
-        }
+            }
 
-        addLastBut.setOnClickListener {
-            val newItemText = addFirstOrLast.text.toString()
-            testListData.add(testListData.size, TestModel(getNewId(), newItemText))
-            mAdapter.updateList()
-        }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                mAdapter.updateList(ArrayList(testListData.filter {
+                    it?.text?.contains(s.toString()) ?: false
+                }))
+            }
+        })
 
-        changeIndex.setOnClickListener {
-            val newItemText = inputToIndex.text.toString()
-            val i = index.text.toString().toInt()
-            testListData[i] = TestModel(testListData[i]!!.id, newItemText)
-            mAdapter.updateList()
-        }
+
     }
+
+    fun getData(): ArrayList<TestModel> {
+        val tempList = ArrayList<TestModel>()
+        for (i in 1..50) {
+            tempList.add(TestModel(i * count, "Item Number $i page $count  "))
+        }
+        return tempList
+    }
+
 
 }
 

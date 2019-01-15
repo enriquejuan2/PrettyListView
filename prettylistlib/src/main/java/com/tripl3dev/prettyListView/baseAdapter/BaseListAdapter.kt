@@ -3,8 +3,8 @@ package com.tripl3dev.prettyListView.baseAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.databinding.ObservableArrayList
+import android.databinding.ObservableInt
 import android.databinding.ObservableList
-import android.os.Handler
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,12 +13,8 @@ import android.view.ViewGroup
 import com.tripl3dev.prettyListView.pagination.EndlessRecyclerViewScrollListener
 import com.tripl3dev.prettyListView.pagination.ListPaginationListener
 import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : RecyclerView.Adapter<GenericHolder>() {
@@ -31,11 +27,10 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
     private var originalList: ArrayList<T?> = ArrayList()
     private fun newList() = mHolderInterface.getList()
     lateinit var listCallBack: ListUtilsCallbacks<T>
-    private val isPaginated = false
     private lateinit var paginationListener: ListPaginationListener
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
-    private var paginationState = NORMAL_STATE
+    private var paginationState = ObservableInt(NORMAL_STATE)
 
 
     companion object {
@@ -91,17 +86,13 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
     }
 
     override fun getItemCount(): Int {
-//        return if(paginationState == LOADING_STATE || paginationState == ERROR_STATE){
-//            getCurrentGenerictList().size-1
-//        }else{
-//        }
         return getCurrentGenerictList().size
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (originalList[position] == null && paginationState == LOADING_STATE) {
+        return if (originalList[position] == null && paginationState.get() == LOADING_STATE) {
             LOADING_STATE
-        } else if (originalList[position] == null && paginationState == ERROR_STATE) {
+        } else if (originalList[position] == null && paginationState.get() == ERROR_STATE) {
             ERROR_STATE
         } else {
             mHolderInterface.getItemViewType(position)
@@ -120,7 +111,9 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
             }
 
             else -> {
-                mHolderInterface.getViewData(holder, getCurrentGenerictList()[position]!!, position)
+                getCurrentGenerictList()[position]?.let {
+                    mHolderInterface.getViewData(holder, it, position)
+                }
             }
         }
 
@@ -131,7 +124,7 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
     /**
      * the list set in the adabter and also figure out if there is any change in item count of adapter
      */
-    fun getCurrentGenerictList(): List<T?> {
+    private fun getCurrentGenerictList(): List<T?> {
         if (itemsCount != originalList.size) {
             itemsCount = originalList.size
             if (this::listCallBack.isInitialized) {
@@ -140,7 +133,6 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
         }
         return originalList
     }
-
 
     private var contentAreTheSame: MyDiffUtil.ContentsAreTheSame<T>? = null
 
@@ -157,7 +149,6 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
      */
     @SuppressLint("CheckResult")
     fun updateList() {
-
         Flowable.just(newList())
                 .map {
                     if (contentAreTheSame == null) {
@@ -173,9 +164,30 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
                 .subscribe {
                     it.dispatchUpdatesTo(this)
                 }
-
     }
 
+    /**
+     * update the adapter list with any list using in filtering
+     */
+
+    @SuppressLint("CheckResult")
+    fun updateList(newList: ArrayList<T?>) {
+        Flowable.just(newList)
+                .map {
+                    if (contentAreTheSame == null) {
+                        DiffUtil.calculateDiff(MyDiffUtil(originalList, it))
+                    } else {
+                        DiffUtil.calculateDiff(MyDiffUtil(originalList, it, contentAreTheSame!!))
+                    }
+                }.doOnNext {
+                    originalList = ArrayList(newList)
+                }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    it.dispatchUpdatesTo(this)
+                }
+    }
 
     /**
      * set Scroll Listener to List if it has pagination
@@ -185,16 +197,12 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
         if (!adapterBuilder.isPaginated()) return
         scrollListener = object : EndlessRecyclerViewScrollListener(adapterBuilder.paginationBuilder!!.visibleThreshold, adapterBuilder.listView.layoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
-                if (paginationState != ERROR_STATE && paginationState != LOADING_STATE) {
-                    originalList.add(null)
-                    notifyItemInserted(originalList.size - 1)
-                    paginationState = LOADING_STATE
-
+                if (paginationState.get() != ERROR_STATE && paginationState.get() != LOADING_STATE) {
+                    paginationLoading()
                     paginationListener.onLoadMore(page, totalItemsCount, view)
                 }
             }
         }
-
         adapterBuilder.listView.addOnScrollListener(scrollListener)
     }
 
@@ -203,38 +211,75 @@ class BaseListAdapter<T>(private val adapterBuilder: AdapterBuilder<T>) : Recycl
         this.paginationListener = paginationListener
     }
 
+    /**
+     * Used to reset pagination behaviour
+     * used when you wanna to set the same adapter instance to another list
+     * which need the default behavior
+     *
+     */
     fun resetPagination() {
         if (!adapterBuilder.isPaginated()) return
         scrollListener.resetState()
     }
 
-    fun paginationLoaded() {
+    /**
+     *Show Pagination Loading
+     */
+    fun paginationLoading() {
         if (!adapterBuilder.isPaginated()) return
-        paginationState = NORMAL_STATE
-        if (originalList[originalList.size - 1] == null) {
-            originalList.removeAt(originalList.size - 1)
-//                notifyDataSetChanged()
-        }
-
+        setPaginationState(LOADING_STATE)
     }
+
+    /**
+     *     PaginationFinishedLoading But still there are more items
+     */
+    fun paginatedDataAdded() {
+        if (!adapterBuilder.isPaginated()) return
+        setPaginationState(NORMAL_STATE, true)
+        updateList()
+    }
+
+    /**
+     * used to remove loading or error item
+     */
+    fun paginationNormalState() {
+        if (!adapterBuilder.isPaginated()) return
+        setPaginationState(NORMAL_STATE, true)
+    }
+
+    /**
+     * Show Pagination Error
+     */
 
     fun paginationError() {
         if (!adapterBuilder.isPaginated()) return
-        paginationState = ERROR_STATE
-        originalList.add(null)
-        notifyItemInserted(originalList.size - 1)
+        setPaginationState(ERROR_STATE)
     }
 
+    /**
+     * Pagination stopped no more need for onloadmore Call
+     */
     fun paginationDone() {
         if (!adapterBuilder.isPaginated()) return
-        paginationState = NORMAL_STATE
-        if (originalList[originalList.size - 1] == null) {
-            originalList.removeAt(originalList.size - 1)
-        }
+        setPaginationState(NORMAL_STATE)
         stopPagination()
-
-
     }
+
+    private fun setPaginationState(state: Int, isThereMoreData: Boolean = false) {
+        paginationState.set(state)
+        if (originalList[originalList.size - 1] != null) {
+            originalList.add(null)
+            notifyItemInserted(originalList.size - 1)
+        } else if (originalList[originalList.size - 1] == null && state == NORMAL_STATE) {
+            originalList.remove(originalList[originalList.size - 1])
+            if (!isThereMoreData) {
+                updateList()
+            }
+        } else {
+            notifyItemChanged(originalList.size - 1)
+        }
+    }
+
 
     private fun stopPagination() {
         if (!adapterBuilder.isPaginated()) return
