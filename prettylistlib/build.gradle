@@ -10,7 +10,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.Tripl3Dev'
 
-version = '2.0.0'
+version = '2.0.1'
 
 android {
     compileSdkVersion 28
