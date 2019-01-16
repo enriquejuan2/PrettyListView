@@ -199,3 +199,14 @@ allprojects {
                  }
              })
      ```
+      ### Credits :
+
+      [**CodePathGuide**](https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView) 
+     
+      [**Mahmoud Abd Elaal**](https://github.com/MahmoudAbdelaalMahmoud)
+
+     ### License 
+
+     ##### ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+
+
