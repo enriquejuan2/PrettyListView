@@ -1,6 +1,7 @@
 # PrettyListView 
 
-[![](https://jitpack.io/v/Rohyme/PrettyListView.svg)]((https://jitpack.io/#Rohyme/PrettyListView))
+[![](https://jitpack.io/v/Rohyme/PrettyListView.svg)]((https://jitpack.io/#Rohyme/PrettyListView))     [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+
 
  **B**ecause Life is too short for duplicating Recyclerview code, PrettylistView introduce a very simple generic adapter, pagination handling with customized views (Error,loading) and updating via diffUtils.  
 
@@ -204,9 +205,3 @@ allprojects {
       [**CodePathGuide**](https://github.com/codepath/android_guides/wiki/Endless-Scrolling-with-AdapterViews-and-RecyclerView) 
      
       [**Mahmoud Abd Elaal**](https://github.com/MahmoudAbdelaalMahmoud)
-
-     ### License 
-
-     [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
-
-
