@@ -1,6 +1,6 @@
 # PrettyListView 
 
-[![](https://jitpack.io/v/Rohyme/PrettyListView.svg)]((https://jitpack.io/#Rohyme/PrettyListView))     [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![](https://jitpack.io/v/Rohyme/PrettyListView.svg)]((https://jitpack.io/#Rohyme/PrettyListView))    [![Android Arsenal]( https://img.shields.io/badge/Android%20Arsenal-PrettyListView-green.svg?style=flat )]( https://android-arsenal.com/details/1/7463 )     [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 
  **B**ecause Life is too short for duplicating Recyclerview code, PrettylistView introduce a very simple generic adapter, pagination handling with customized views (Error,loading) and updating via diffUtils.  
